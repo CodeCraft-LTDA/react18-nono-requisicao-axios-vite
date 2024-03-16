@@ -17,7 +17,7 @@ const App = () => {
     setLoading(true);
 
     try {
-      const postsRequest = await axios.get('https://jsonplaceholder.typicode.com/posts');
+      const postsRequest = await axios.get<Post[]>('https://jsonplaceholder.typicode.com/posts');
       setPostsData(postsRequest.data);
     } catch (error) {
       setError('Error getting posts');
