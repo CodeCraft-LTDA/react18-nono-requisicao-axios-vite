@@ -26,11 +26,30 @@ const App = () => {
     setLoading(false);
   }
 
+  const handlePostPost = async () => {
+    setLoading(true);
+
+    try {
+      const newPost = {
+        userId: 1,
+        id: 101,
+        title: 'title',
+        body: 'body'
+      }
+      const postRequest = await axios.post<Post>('https://jsonplaceholder.typicode.com/posts', newPost);
+      console.log(postRequest.data);
+    } catch (error) {
+      setError('Error posting post');
+    }
+
+    setLoading(false);
+  }
+
 
   return (
     <div>
       <button onClick={handleGetPosts}>Get posts</button>
-      {/* <button onClick={handlePostPost}>Post post</button> */}
+      <button onClick={handlePostPost}>Post post</button>
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
       <ul>
