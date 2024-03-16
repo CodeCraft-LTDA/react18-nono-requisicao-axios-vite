@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useState } from "react";
 
 type Post = {
@@ -63,12 +63,27 @@ const App = () => {
     setLoading(false);
   }
 
+  const handleGetPostsWithError = async () => {
+    setLoading(true);
+
+    try {
+      const postsRequest = await axios.get<Post[]>('https://jsonplaceholder2.typicode.com/posts');
+      setPostsData(postsRequest.data);
+    } catch (error) {
+      const errorResponse = error as AxiosError;
+      setError(errorResponse.message);
+    }
+
+    setLoading(false);
+  }
+
 
   return (
     <div>
       <button onClick={handleGetPosts}>Get posts</button>
       <button onClick={handlePostPost}>Post post</button>
       <button onClick={handleGetPostsWithBaseUrl}>Get posts with base url</button>
+      <button onClick={handleGetPostsWithError}>Get posts with error</button>
 
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
