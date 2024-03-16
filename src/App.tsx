@@ -13,6 +13,8 @@ const App = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
 
+  const controller = new AbortController();
+
   // axios.defaults.baseURL = 'https://jsonplaceholder.typicode.com';
   const api = axios.create({
     baseURL: 'https://jsonplaceholder.typicode.com'
@@ -77,6 +79,16 @@ const App = () => {
     setLoading(false);
   }
 
+  const handleOnClick = async () => {
+    await axios.get<Post[]>('https://jsonplaceholder.typicode.com/posts', {
+      signal: controller.signal
+    });
+  }
+
+  const handleOnCancel = async () => {
+    controller.abort();
+  }
+
 
   return (
     <div>
@@ -84,6 +96,9 @@ const App = () => {
       <button onClick={handlePostPost}>Post post</button>
       <button onClick={handleGetPostsWithBaseUrl}>Get posts with base url</button>
       <button onClick={handleGetPostsWithError}>Get posts with error</button>
+
+      <button onClick={handleOnClick}>Request with abort</button>
+      <button onClick={handleOnCancel}>Cancel request</button>
 
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
