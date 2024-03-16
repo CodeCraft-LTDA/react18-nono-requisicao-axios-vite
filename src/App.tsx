@@ -13,6 +13,11 @@ const App = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
 
+  // axios.defaults.baseURL = 'https://jsonplaceholder.typicode.com';
+  const api = axios.create({
+    baseURL: 'https://jsonplaceholder.typicode.com'
+  });
+
   const handleGetPosts = async () => {
     setLoading(true);
 
@@ -45,11 +50,26 @@ const App = () => {
     setLoading(false);
   }
 
+  const handleGetPostsWithBaseUrl = async () => {
+    setLoading(true);
+
+    try {
+      const postsRequest = await api.get<Post[]>('/posts');
+      setPostsData(postsRequest.data);
+    } catch (error) {
+      setError('Error getting posts');
+    }
+
+    setLoading(false);
+  }
+
 
   return (
     <div>
       <button onClick={handleGetPosts}>Get posts</button>
       <button onClick={handlePostPost}>Post post</button>
+      <button onClick={handleGetPostsWithBaseUrl}>Get posts with base url</button>
+
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
       <ul>
